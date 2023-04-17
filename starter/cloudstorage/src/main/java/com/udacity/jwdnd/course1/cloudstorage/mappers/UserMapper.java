@@ -14,5 +14,5 @@ public interface UserMapper {
 
     //insert a user with a username, passwordHash, firstname, and lastname
     @Insert("INSERT INTO USERS (username, salt, passwordHash, firstname, lastname) VALUES (#{username}, #{salt}, #{passwordHash}, #{firstname}, #{lastname})")
-    int createUser(User user);
+    int createUser(String username, String salt, String passwordHash, String firstname, String lastname);
 }
