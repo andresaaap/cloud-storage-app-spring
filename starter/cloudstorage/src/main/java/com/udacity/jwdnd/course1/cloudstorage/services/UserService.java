@@ -29,20 +29,17 @@ public class UserService {
 
     // create user
     public int createUser(User newUser){
-        // check that the username doesn't already exist
-        if (checkUsername(newUser.getUsername())) {
-            SecureRandom random = new SecureRandom();
-            // generate a random salt
-            byte[] salt = new byte[16];
-            // assign random value to salt
-            random.nextBytes(salt);
-            // encode the salt to a string
-            String encodedSalt = Base64.getEncoder().encodeToString(salt);
-            // get the hash value of the password using the salt
-            String passwordSaltHash =  hashService.getHashedValue(newUser.getPassword(), encodedSalt);
-            // create the user using the userMapper
-            return userMapper.createUser(newUser.getUsername(), encodedSalt, passwordSaltHash, newUser.getFirstname(), newUser.getLastname());
-        }
+        SecureRandom random = new SecureRandom();
+        // generate a random salt
+        byte[] salt = new byte[16];
+        // assign random value to salt
+        random.nextBytes(salt);
+        // encode the salt to a string
+        String encodedSalt = Base64.getEncoder().encodeToString(salt);
+        // get the hash value of the password using the salt
+        String passwordSaltHash =  hashService.getHashedValue(newUser.getPassword(), encodedSalt);
+        // create the user using the userMapper
+        return userMapper.createUser(newUser.getUsername(), encodedSalt, passwordSaltHash, newUser.getFirstname(), newUser.getLastname());
     }
 
 
