@@ -13,6 +13,6 @@ public interface UserMapper {
     User getUser(String username);
 
     //insert a user with a username, passwordHash, firstname, and lastname
-    @Insert("INSERT INTO USERS (username, salt, passwordHash, firstname, lastname) VALUES (#{username}, #{salt}, #{passwordHash}, #{firstname}, #{lastname})")
+    @Insert("INSERT INTO USERS (username, salt, password, firstname, lastname) VALUES (#{username}, #{salt}, #{passwordHash}, #{firstname}, #{lastname})")
     int createUser(String username, String salt, String passwordHash, String firstname, String lastname);
 }
