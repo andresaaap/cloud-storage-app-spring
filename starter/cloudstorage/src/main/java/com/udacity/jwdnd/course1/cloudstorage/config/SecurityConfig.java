@@ -26,7 +26,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         // authorize requests and permit all for the sighup, css, and js
         http.authorizeRequests()
-                .antMatchers("/signup", "/css/**", "/js/**").permitAll()
+                .antMatchers("/signup", "/css/**", "/js/**", "/h2-console/**").permitAll()
                 .anyRequest().authenticated();
 
         // Generates a login form at /login and allows anyone to access it
