@@ -39,7 +39,7 @@ public class UserService {
         // get the hash value of the password using the salt
         String passwordSaltHash =  hashService.getHashedValue(newUser.getPassword(), encodedSalt);
         // create the user using the userMapper
-        return userMapper.createUser(newUser.getUsername(), encodedSalt, passwordSaltHash, newUser.getFirstname(), newUser.getLastname());
+        return userMapper.insert(new User(null, newUser.getUsername(), encodedSalt, passwordSaltHash, newUser.getFirstname(), newUser.getLastname()));
     }
 
 
