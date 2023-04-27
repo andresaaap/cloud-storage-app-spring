@@ -42,5 +42,9 @@ public class UserService {
         return userMapper.insert(new User(null, newUser.getUsername(), encodedSalt, passwordSaltHash, newUser.getFirstname(), newUser.getLastname()));
     }
 
+    // get user by username
+    public User getUser(String username) {
+        return userMapper.getUser(username);
+    }
 
 }
