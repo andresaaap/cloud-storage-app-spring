@@ -1,6 +1,7 @@
 package com.udacity.jwdnd.course1.cloudstorage.model;
 
 public class NoteForm {
+    private Integer noteid;
     private String notetitle;
     // create notedescription variable
     private String notedescription;
@@ -8,10 +9,20 @@ public class NoteForm {
     private Integer userid;
 
     // create constructor
-    public NoteForm(String notetitle, String notedescription, Integer userid) {
+    public NoteForm(Integer noteid, String notetitle, String notedescription, Integer userid) {
+        this.noteid = noteid;
         this.notetitle = notetitle;
         this.notedescription = notedescription;
         this.userid = userid;
+    }
+
+    // getter and setter for noteid
+    public Integer getNoteid() {
+        return noteid;
+    }
+
+    public void setNoteid(Integer noteid) {
+        this.noteid = noteid;
     }
 
     // getter and setter for notetitle

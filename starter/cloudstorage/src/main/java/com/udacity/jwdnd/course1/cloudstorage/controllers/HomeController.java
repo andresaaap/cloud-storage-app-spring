@@ -8,10 +8,7 @@ import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/home")
@@ -27,7 +24,7 @@ public class HomeController {
         this.userService = userService;
     }
 
-    @GetMapping()
+    @GetMapping("")
     public String homeView(NoteForm noteForm, Model model) {
         // add to model an attibute called notes with the value of noteService.getNotes()
         model.addAttribute("notes", noteService.getNotes());
@@ -35,7 +32,7 @@ public class HomeController {
     }
 
     //PostMapping for adding a note
-    @PostMapping()
+    @PostMapping("/notes/add")
     public String addNote(Authentication authentication, NoteForm noteForm, Model model) {
         User currentUser = userService.getUser(authentication.getName());
         noteForm.setUserid(currentUser.getUserid());
@@ -43,5 +40,22 @@ public class HomeController {
         model.addAttribute("notes", noteService.getNotes());
         return "home";
     }
+
+    //PutMapping for updating a note using the endpoint /notes/update/{noteid}
+    @GetMapping("/notes/update")
+    public String updateNoteById(NoteForm noteForm, Model model) {
+        noteService.updateNoteById(noteForm);
+        model.addAttribute("notes", noteService.getNotes());
+        return "home";
+    }
+
+    //Delete mapping for deleting a note by id
+    @GetMapping("/notes/delete/{noteid}")
+    public String deleteNoteById(@PathVariable Integer noteid, NoteForm noteForm, Model model) {
+        noteService.deleteNoteById(noteid);
+        model.addAttribute("notes", noteService.getNotes());
+        return "home";
+    }
+
 
 }

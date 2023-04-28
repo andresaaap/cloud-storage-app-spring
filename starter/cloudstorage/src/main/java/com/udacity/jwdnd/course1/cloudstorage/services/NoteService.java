@@ -30,4 +30,14 @@ public class NoteService {
         // return noteMapper.insert(note);
         return noteMapper.insertNote(new Note(null, note.getNotetitle(), note.getNotedescription(), note.getUserid()));
     }
+
+    // delete a note by id
+    public int deleteNoteById(Integer noteid) {
+        return noteMapper.deleteNote(noteid);
+    }
+
+    // update a note by id
+    public int updateNoteById(NoteForm noteForm) {
+        return noteMapper.updateNote(noteForm.getNotetitle(), noteForm.getNotedescription(), noteForm.getNoteid());
+    }
 }
