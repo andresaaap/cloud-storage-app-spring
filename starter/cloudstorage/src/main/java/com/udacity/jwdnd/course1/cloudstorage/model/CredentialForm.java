@@ -1,25 +1,21 @@
 package com.udacity.jwdnd.course1.cloudstorage.model;
 
-public class Credential {
-    // create credentialid variable using cammel case
+public class CredentialForm {
     private Integer credentialId;
     // create url variable using cammel case
     private String url;
     // create username variable using cammel case
     private String username;
     // create key variable using cammel case
-    private String key;
-    // create password variable using cammel case
     private String password;
     // create userId variable using cammel case
     private Integer userId;
 
     // create constructor
-    public Credential(Integer credentialId, String url, String username, String key, String password, Integer userId) {
+    public CredentialForm(Integer credentialId, String url, String username, String password, Integer userId) {
         this.credentialId = credentialId;
         this.url = url;
         this.username = username;
-        this.key = key;
         this.password = password;
         this.userId = userId;
     }
@@ -49,15 +45,6 @@ public class Credential {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    // create setter and getter for key
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
     }
 
     // create setter and getter for password
