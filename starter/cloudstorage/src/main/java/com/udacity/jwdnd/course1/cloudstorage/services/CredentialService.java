@@ -24,7 +24,18 @@ public class CredentialService {
 
     // get all credentials
     public List<Credential> getCredentials() {
-        return credentialMapper.getCredentials();
+
+        List<Credential> credentials = credentialMapper.getCredentials();
+
+        // loop through the credentials and decrypt the password
+        for (Credential credential : credentials) {
+            String encryptedPassword = credential.getPassword();
+            String encodedKey = credential.getKey();
+            String decryptedPassword = encryptionService.decryptValue(encryptedPassword, encodedKey);
+            credential.setPassword(decryptedPassword);
+        }
+
+        return credentials;
     }
 
     // add new credential and has a parameter of type CredentialForm
