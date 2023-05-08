@@ -17,8 +17,8 @@ public interface CredentialMapper {
     @Insert("INSERT INTO CREDENTIALS (url, username, key, password, userid) VALUES (#{url}, #{username}, #{key}, #{password}, #{userId})")
     int insertCredential(Credential credential);
     // update a credential with a url, username, key, password, and userid in mybatis
-    @Update("UPDATE CREDENTIALS SET url = #{url}, username = #{username}, key = #{key}, password = #{password}, userid = #{userid} WHERE credentialid = #{credentialid}")
-    int updateCredential(String url, String username, String key, String password, int userid, int credentialid);
+    @Update("UPDATE CREDENTIALS SET url = #{url}, username = #{username}, password = #{password} WHERE credentialid = #{credentialid}")
+    int updateCredential(String url, String username, String password, int credentialid);
     // delete a credential by credentialid in mybatis
     @Delete("DELETE FROM CREDENTIALS WHERE credentialid = #{credentialid}")
     int deleteCredential(int credentialid);

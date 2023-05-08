@@ -68,12 +68,20 @@ public class HomeController {
     // PostMapping for adding a credential
     @PostMapping("/credentials/add")
     public String addCredential(Authentication authentication, CredentialForm credentialForm, Model model) {
-        User currentUser = userService.getUser(authentication.getName());
-        credentialForm.setUserId(currentUser.getUserid());
-        credentialService.addCredential(credentialForm);
-        model.addAttribute("credentials", credentialService.getCredentials());
-        // add attribute to model called noteForm with the value of new NoteForm() initialized with null values
-        model.addAttribute("noteForm", new NoteForm(null, null, null, null));
+        if(credentialForm.getCredentialId() != null) {
+            credentialService.updateCredential(credentialForm);
+            model.addAttribute("credentials", credentialService.getCredentials());
+            // add attribute to model called noteForm with the value of new NoteForm() initialized with null values
+            model.addAttribute("noteForm", new NoteForm(null, null, null, null));
+        }
+        else {
+            User currentUser = userService.getUser(authentication.getName());
+            credentialForm.setUserId(currentUser.getUserid());
+            credentialService.addCredential(credentialForm);
+            model.addAttribute("credentials", credentialService.getCredentials());
+            // add attribute to model called noteForm with the value of new NoteForm() initialized with null values
+            model.addAttribute("noteForm", new NoteForm(null, null, null, null));
+        }
 
         return "home";
     }
