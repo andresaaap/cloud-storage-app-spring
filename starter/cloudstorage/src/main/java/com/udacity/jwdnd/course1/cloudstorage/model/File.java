@@ -2,7 +2,7 @@ package com.udacity.jwdnd.course1.cloudstorage.model;
 
 public class File {
     // create fileid variable
-    private int fileId;
+    private Integer fileId;
     // create filename variable
     private String fileName;
     // create contenttype variable
@@ -10,12 +10,12 @@ public class File {
     // create filesize variable
     private String fileSize;
     // create userid variable
-    private int userId;
+    private Integer userId;
     // create filedata variable
     private byte[] fileData;
 
     // create constructor
-    public File(int fileId, String fileName, String contentType, String fileSize, int userId, byte[] fileData) {
+    public File(Integer fileId, String fileName, String contentType, String fileSize, Integer userId, byte[] fileData) {
         this.fileId = fileId;
         this.fileName = fileName;
         this.contentType = contentType;
@@ -25,11 +25,11 @@ public class File {
     }
 
     // getter and setter for fileid
-    public int getFileId() {
+    public Integer getFileId() {
         return fileId;
     }
 
-    public void setFileId(int fileId) {
+    public void setFileId(Integer fileId) {
         this.fileId = fileId;
     }
 
@@ -61,11 +61,11 @@ public class File {
     }
 
     // getter and setter for userid
-    public int getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 

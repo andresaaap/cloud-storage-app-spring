@@ -5,17 +5,23 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.List;
+
 @Mapper
 public interface FileMapper {
+
+    // get all files called getFiles using mybatis
+    @Select("SELECT * FROM FILES")
+    List<File> getFiles();
     // select a file by fileId called getFile
     @Select("SELECT * FROM FILES WHERE fileId = #{fileId}")
-    File getFile(int fileId);
+    File getFile(Integer fileId);
     // insert a file with a filename, contenttype, filesize, userid, and filedata
-    @Insert("INSERT INTO FILES (filename, contenttype, filesize, userid, filedata) VALUES (#{filename}, #{contenttype}, #{filesize}, #{userid}, #{filedata})")
-    int insertFile(String filename, String contenttype, String filesize, int userid, byte[] filedata);
+    @Insert("INSERT INTO FILES (filename, contenttype, filesize, userid, filedata) VALUES (#{fileName}, #{contentType}, #{fileSize}, #{userId}, #{fileData})")
+    Integer insertFile(File file);
     // Delete a file by fileId called deleteFile using mybatis
     @Select("DELETE FROM FILES WHERE fileId = #{fileId}")
-    int deleteFile(int fileId);
+    Integer deleteFile(Integer fileId);
 
 
 
