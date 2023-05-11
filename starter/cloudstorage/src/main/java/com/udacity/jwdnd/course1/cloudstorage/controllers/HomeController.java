@@ -123,5 +123,19 @@ public class HomeController {
         return "home";
     }
 
+    // GetMapping for deleting a file by id
+    @GetMapping("/files/delete/{fileid}")
+    public String deleteFileById(@PathVariable Integer fileid, Model model) {
+        fileService.deleteFile(fileid);
+        // add attribute to model called files with the value of fileService.getFiles()
+        model.addAttribute("files", fileService.getFiles());
+        // add attribute to model called noteForm with the value of new NoteForm() initialized with null values
+        model.addAttribute("noteForm", new NoteForm(null, null, null, null));
+        // add attribute to model called credentialForm with the value of new CredentialForm() initialized with null values
+        model.addAttribute("credentialForm", new CredentialForm(null, null, null, null, null));
+
+        return "home";
+    }
+
 
 }
