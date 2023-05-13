@@ -200,6 +200,34 @@ class CloudStorageApplicationTests {
 
 	}
 
+	@Test
+	public void testHomePageNotAccessibleWithoutLoggingIn(){
+		LoginPage loginPage = new LoginPage(driver, port);
+		HomePage homePage = loginPage.goToHomePage();
+		Assertions.assertFalse(homePage.isOnHomePage());
+	}
+
+	@Test
+	public void testSignupLoginFlow(){
+		// signup user
+		// login user
+		// check if user is on home page
+		// logout user
+		// check if user can't access home page
+
+		driver.get("http://localhost:" + this.port + "/signup");
+		SignupPage signupPage = new SignupPage(driver, port);
+		signupPage = signupPage.signup("user1", "pass1", "firstname1", "lastname1");
+		LoginPage loginPage = signupPage.goToLoginPage();
+		HomePage homePage = loginPage.login("user1", "pass1");
+		homePage.waitForLogoutButton();
+		Assertions.assertTrue(homePage.isOnHomePage());
+
+		loginPage = homePage.logout();
+		homePage = loginPage.goToHomePage();
+		Assertions.assertFalse(homePage.isOnHomePage());
+	}
+
 
 
 }

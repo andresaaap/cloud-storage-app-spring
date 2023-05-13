@@ -28,17 +28,32 @@ public class SignupPage {
     @FindBy(id = "buttonSignUp")
     private WebElement buttonSignUp;
 
-    public SignupPage(WebDriver driver) {
+    // variable for WebDriver
+    private WebDriver driver;
+
+    private int port;
+
+    public SignupPage(WebDriver driver, int port) {
+
         PageFactory.initElements(driver, this);
+        this.driver = driver;
+        this.port = port;
     }
 
     // method to signup
-    public void signup(String username, String password, String firstName, String lastName) {
+    public SignupPage signup(String username, String password, String firstName, String lastName) {
         inputUsername.sendKeys(username);
         inputPassword.sendKeys(password);
         inputFirstName.sendKeys(firstName);
         inputLastName.sendKeys(lastName);
         buttonSignUp.click();
+        return this;
+    }
+
+    // method to go to login page
+    public LoginPage goToLoginPage() {
+        driver.get("http://localhost:" + port + "/login");
+        return new LoginPage(driver, port);
     }
 
 
