@@ -228,6 +228,26 @@ class CloudStorageApplicationTests {
 		Assertions.assertFalse(homePage.isOnHomePage());
 	}
 
+	// test create a note
+	@Test
+	public void testCreateNote(){
+		// signup user
+		// login user
+		// create note
+		// check if note is displayed
+
+		driver.get("http://localhost:" + this.port + "/signup");
+		SignupPage signupPage = new SignupPage(driver, port);
+		signupPage = signupPage.signup("user2", "pass2", "firstname2", "lastname2");
+		LoginPage loginPage = signupPage.goToLoginPage();
+		HomePage homePage = loginPage.login("user2", "pass2");
+		String noteTitle = "grocery list";
+		homePage.addNote(noteTitle, "milk, eggs, bread");
+		String realNoteTitle = homePage.findNoteById(1);
+		// assert if notetitle is grocery list
+		Assertions.assertEquals(noteTitle, realNoteTitle);
+	}
+
 
 
 }

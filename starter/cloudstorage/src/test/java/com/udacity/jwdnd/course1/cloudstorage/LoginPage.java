@@ -21,6 +21,7 @@ public class LoginPage {
     @FindBy(id = "login-button")
     private WebElement loginButton;
 
+
     // variable for by login button
     private By loginButtonBy = By.id("login-button");
 
@@ -41,7 +42,7 @@ public class LoginPage {
     public HomePage login(String username, String password) {
         // wait until the login button is visible
         WebDriverWait wait = new WebDriverWait(driver, 5);
-        WebElement marker = wait.until(webDriver -> webDriver.findElement(loginButtonBy));
+        loginButton = wait.until(webDriver -> webDriver.findElement(loginButtonBy));
         inputUsername.sendKeys(username);
         inputPassword.sendKeys(password);
         loginButton.click();
