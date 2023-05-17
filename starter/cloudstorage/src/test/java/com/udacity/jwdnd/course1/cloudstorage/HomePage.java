@@ -273,4 +273,37 @@ public class HomePage {
         return credentialUrl.getText() + " " + credentialUsername.getText() + " " + credentialPassword.getText();
     }
 
+    public void deleteCredentialById(Integer credentialId) {
+        WebDriverWait wait = new WebDriverWait(driver, 2);
+        // wait until the nav-notes-tab is clickable and click it
+        wait.until(ExpectedConditions.elementToBeClickable(navCredentialsTab));
+        navCredentialsTab.click();
+
+        // wait until the note with id noteId is visible
+        WebElement credential = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credential-"+credentialId.toString())));
+
+        // wait until the button of note is clickable
+        WebElement deleteCredentialButton = wait.until(ExpectedConditions.elementToBeClickable(credential.findElement(By.tagName("a"))));
+        deleteCredentialButton.click();
+    }
+
+    public boolean isCredentialPresentById(Integer credentialId) {
+        WebDriverWait wait = new WebDriverWait(driver, 2);
+        // wait until the nav-notes-tab is clickable and click it
+        wait.until(ExpectedConditions.elementToBeClickable(navCredentialsTab));
+        navCredentialsTab.click();
+
+        // wait until the note table is visible
+        WebElement credentialTable = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credentialTable")));
+
+        // if there is a note with id noteId, return true
+        // else return false
+        try {
+            credentialTable.findElement(By.id("credential-"+credentialId.toString()));
+            return true;
+        } catch (NoSuchElementException e) {
+            return false;
+        }
+    }
+
 }

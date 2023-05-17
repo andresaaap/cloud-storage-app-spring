@@ -327,6 +327,25 @@ class CloudStorageApplicationTests {
 		Assertions.assertEquals(credentialText, realCredentialText);
 	}
 
+	@Test
+	public void testDeleteCredential(){
+		driver.get("http://localhost:" + this.port + "/signup");
+		SignupPage signupPage = new SignupPage(driver, port);
+		signupPage = signupPage.signup("user2", "pass2", "firstname2", "lastname2");
+		LoginPage loginPage = signupPage.goToLoginPage();
+		HomePage homePage = loginPage.login("user2", "pass2");
+
+		// create credential
+		String url = "www.google.com";
+		String username = "user";
+		String password = "pass";
+		homePage.addCredential(url, username, password);
+
+		// delete credential
+		homePage.deleteCredentialById(1);
+		// verify that the credential is deleted
+		Assertions.assertFalse(homePage.isCredentialPresentById(1));
+	}
 
 
 }
