@@ -242,10 +242,65 @@ class CloudStorageApplicationTests {
 		LoginPage loginPage = signupPage.goToLoginPage();
 		HomePage homePage = loginPage.login("user2", "pass2");
 		String noteTitle = "grocery list";
-		homePage.addNote(noteTitle, "milk, eggs, bread");
-		String realNoteTitle = homePage.findNoteById(1);
+		String noteDescription = "milk, eggs, bread";
+
+		homePage.addNote(noteTitle, noteDescription);
+		String realNoteText = homePage.findNoteById(1);
+
+		// combine the noteTitle and noteDescription into one string
+		String noteText = noteTitle + " " + noteDescription;
+
 		// assert if notetitle is grocery list
-		Assertions.assertEquals(noteTitle, realNoteTitle);
+		Assertions.assertEquals(noteText, realNoteText);
+	}
+
+	@Test
+	public void testEditNote(){
+		// signup user
+		// login user
+		// create note
+		// check if note is displayed
+
+		driver.get("http://localhost:" + this.port + "/signup");
+		SignupPage signupPage = new SignupPage(driver, port);
+		signupPage = signupPage.signup("user2", "pass2", "firstname2", "lastname2");
+		LoginPage loginPage = signupPage.goToLoginPage();
+		HomePage homePage = loginPage.login("user2", "pass2");
+		String noteTitle = "grocery list";
+		String noteDescription = "milk, eggs, bread";
+		homePage.addNote(noteTitle, noteDescription);
+
+		String noteTitle2 = "grocery list fruits";
+		String noteDescription2 = "bananas, apples, oranges";
+		homePage.editNoteById(1, noteTitle2, noteDescription2);
+		String realNoteText = homePage.findNoteById(1);
+
+		// combine the noteTitle and noteDescription into one string
+		String noteText2 = noteTitle2 + " " + noteDescription2;
+		// assert if notetitle is grocery list
+		Assertions.assertEquals(noteText2, realNoteText);
+	}
+
+	@Test
+	public void testDeleteNote(){
+		// signup user
+		// login user
+		// create note
+		// check if note is displayed
+
+		driver.get("http://localhost:" + this.port + "/signup");
+		SignupPage signupPage = new SignupPage(driver, port);
+		signupPage = signupPage.signup("user2", "pass2", "firstname2", "lastname2");
+		LoginPage loginPage = signupPage.goToLoginPage();
+		HomePage homePage = loginPage.login("user2", "pass2");
+		String noteTitle = "grocery list";
+		String noteDescription = "milk, eggs, bread";
+		homePage.addNote(noteTitle, noteDescription);
+
+		// delete note
+		homePage.deleteNoteById(1);
+		// verify that the note is deleted
+		Assertions.assertFalse(homePage.isNotePresentById(1));
 	}
 
 

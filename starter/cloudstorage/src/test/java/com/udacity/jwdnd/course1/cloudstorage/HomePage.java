@@ -1,6 +1,7 @@
 package com.udacity.jwdnd.course1.cloudstorage;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -38,6 +39,10 @@ public class HomePage {
     @FindBy(id = "note-submit-primary")
     private WebElement noteSubmit;
 
+    // variable find by id note edit submit button
+    @FindBy(id = "note-edit-submit-primary")
+    private WebElement noteEditSubmit;
+
     // variable find by id note-description-edit
     @FindBy(id = "note-description-edit")
     private WebElement noteDescriptionEdit;
@@ -58,6 +63,12 @@ public class HomePage {
 
     // variable for by note-description
     private By noteDescriptionBy = By.id("note-description");
+
+    // variable for by note-title-edit
+    private By noteTitleEditBy = By.id("note-title-edit");
+
+    // variable for by note-description-edit
+    private By noteDescriptionEditBy = By.id("note-description-edit");
 
 
 
@@ -118,13 +129,71 @@ public class HomePage {
 
         // wait until the note with id noteId is visible
         WebElement note = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("note-"+noteId.toString())));
-        //print the note
-        System.out.println(note.getText());
+
         // get web element of the note with id note-1
         // get the text of the th tag of the note
         WebElement noteTitle = note.findElements(By.tagName("th")).get(0);
-        // return the text of the noteTitle
-        return noteTitle.getText();
+        WebElement noteDescription = note.findElements(By.tagName("td")).get(1);
+        // return the combined text of the note
+        return noteTitle.getText() + " " + noteDescription.getText();
+    }
+
+    // method editNoteById
+    public void editNoteById(Integer noteId, String title, String description) {
+        WebDriverWait wait = new WebDriverWait(driver, 2);
+        // wait until the nav-notes-tab is clickable and click it
+        wait.until(ExpectedConditions.elementToBeClickable(navNotesTab));
+        navNotesTab.click();
+
+        // wait until the note with id noteId is visible
+        WebElement note = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("note-"+noteId.toString())));
+
+        // wait until the button of note is clickable
+        WebElement editNoteButton = wait.until(ExpectedConditions.elementToBeClickable(note.findElement(By.tagName("button"))));
+        editNoteButton.click();
+
+        wait.until(ExpectedConditions.visibilityOfElementLocated(noteTitleEditBy));
+        noteTitleEdit.clear();
+        noteTitleEdit.sendKeys(title);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(noteDescriptionEditBy));
+        noteDescriptionEdit.clear();
+        noteDescriptionEdit.sendKeys(description);
+
+        wait.until(ExpectedConditions.elementToBeClickable(noteEditSubmit));
+        noteEditSubmit.click();
+    }
+
+    public void deleteNoteById(Integer noteId) {
+        WebDriverWait wait = new WebDriverWait(driver, 2);
+        // wait until the nav-notes-tab is clickable and click it
+        wait.until(ExpectedConditions.elementToBeClickable(navNotesTab));
+        navNotesTab.click();
+
+        // wait until the note with id noteId is visible
+        WebElement note = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("note-"+noteId.toString())));
+
+        // wait until the button of note is clickable
+        WebElement deleteNoteButton = wait.until(ExpectedConditions.elementToBeClickable(note.findElement(By.tagName("a"))));
+        deleteNoteButton.click();
+    }
+
+    public boolean isNotePresentById(Integer noteId) {
+        WebDriverWait wait = new WebDriverWait(driver, 2);
+        // wait until the nav-notes-tab is clickable and click it
+        wait.until(ExpectedConditions.elementToBeClickable(navNotesTab));
+        navNotesTab.click();
+
+        // wait until the note table is visible
+        WebElement noteTable = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("userTable")));
+
+        // if there is a note with id noteId, return true
+        // else return false
+        try {
+            noteTable.findElement(By.id("note-"+noteId.toString()));
+            return true;
+        } catch (NoSuchElementException e) {
+            return false;
+        }
     }
 
 }
