@@ -47,6 +47,30 @@ public class HomePage {
     @FindBy(id = "note-description-edit")
     private WebElement noteDescriptionEdit;
 
+    // navCredentialsTab
+    @FindBy(id = "nav-credentials-tab")
+    private WebElement navCredentialsTab;
+
+    // btnAddCredential
+    @FindBy(id = "btn-add-credential")
+    private WebElement btnAddCredential;
+
+    // credentialUrl
+    @FindBy(id = "credential-url")
+    private WebElement credentialUrl;
+
+    // credentialUsername
+    @FindBy(id = "credential-username")
+    private WebElement credentialUsername;
+
+    // credentialPassword
+    @FindBy(id = "credential-password")
+    private WebElement credentialPassword;
+
+    // credentialSubmit
+    @FindBy(id = "credential-submit-primary")
+    private WebElement credentialSubmit;
+
     // variable for WebDriver
     private WebDriver driver;
 
@@ -69,6 +93,15 @@ public class HomePage {
 
     // variable for by note-description-edit
     private By noteDescriptionEditBy = By.id("note-description-edit");
+
+    // variable for by credential-url
+    private By credentialUrlBy = By.id("credential-url");
+
+    // variable for by credential-username
+    private By credentialUsernameBy = By.id("credential-username");
+
+    // variable for by credential-password
+    private By credentialPasswordBy = By.id("credential-password");
 
 
 
@@ -194,6 +227,50 @@ public class HomePage {
         } catch (NoSuchElementException e) {
             return false;
         }
+    }
+
+    public void addCredential(String url, String username, String password) {
+        WebDriverWait wait = new WebDriverWait(driver, 2);
+        wait.until(ExpectedConditions.elementToBeClickable(navCredentialsTab));
+        navCredentialsTab.click();
+
+        // wait until the add note button is visible
+        wait.until(ExpectedConditions.elementToBeClickable(btnAddCredential));
+        btnAddCredential.click();
+
+        // wait until the note title is visible
+        wait.until(ExpectedConditions.visibilityOfElementLocated(credentialUrlBy));
+        credentialUrl.sendKeys(url);
+
+        // wait until the note description is visible
+        wait.until(ExpectedConditions.visibilityOfElementLocated(credentialUsernameBy));
+        credentialUsername.sendKeys(username);
+
+        // wait until the note description is visible
+        wait.until(ExpectedConditions.visibilityOfElementLocated(credentialPasswordBy));
+        credentialPassword.sendKeys(password);
+
+        // click save changes
+        wait.until(ExpectedConditions.elementToBeClickable(credentialSubmit));
+        credentialSubmit.click();
+    }
+
+    public String findCredentialById(Integer credentialId) {
+        WebDriverWait wait = new WebDriverWait(driver, 5);
+        // wait until the nav-notes-tab is clickable and click it
+        wait.until(ExpectedConditions.elementToBeClickable(navCredentialsTab));
+        navCredentialsTab.click();
+
+        // wait until the note with id noteId is visible
+        WebElement credential = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credential-"+credentialId.toString())));
+
+        // get web element of the note with id note-1
+        // get the text of the th tag of the note
+        WebElement credentialUrl = credential.findElements(By.tagName("th")).get(0);
+        WebElement credentialUsername = credential.findElements(By.tagName("td")).get(1);
+        WebElement credentialPassword = credential.findElements(By.tagName("td")).get(2);
+        // return the combined text of the note
+        return credentialUrl.getText() + " " + credentialUsername.getText() + " " + credentialPassword.getText();
     }
 
 }

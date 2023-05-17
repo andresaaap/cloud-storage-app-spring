@@ -303,6 +303,30 @@ class CloudStorageApplicationTests {
 		Assertions.assertFalse(homePage.isNotePresentById(1));
 	}
 
+	@Test
+	public void testCreateCredential(){
+		driver.get("http://localhost:" + this.port + "/signup");
+		SignupPage signupPage = new SignupPage(driver, port);
+		signupPage = signupPage.signup("user2", "pass2", "firstname2", "lastname2");
+		LoginPage loginPage = signupPage.goToLoginPage();
+		HomePage homePage = loginPage.login("user2", "pass2");
+
+		// create credential
+		String url = "www.google.com";
+		String username = "user";
+		String password = "pass";
+		homePage.addCredential(url, username, password);
+
+		// get the credential text
+		String realCredentialText = homePage.findCredentialById(1);
+
+		// combine the url, username, and password into one string
+		String credentialText = url + " " + username + " " + password;
+
+		// assert if credential text is the same
+		Assertions.assertEquals(credentialText, realCredentialText);
+	}
+
 
 
 }
