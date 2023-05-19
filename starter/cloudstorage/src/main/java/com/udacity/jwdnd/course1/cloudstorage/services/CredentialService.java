@@ -24,16 +24,7 @@ public class CredentialService {
 
     // get all credentials
     public List<Credential> getCredentials() {
-
         List<Credential> credentials = credentialMapper.getCredentials();
-
-        // loop through the credentials and decrypt the password
-        for (Credential credential : credentials) {
-            String encryptedPassword = credential.getPassword();
-            String encodedKey = credential.getKey();
-            String decryptedPassword = encryptionService.decryptValue(encryptedPassword, encodedKey);
-            credential.setPassword(decryptedPassword);
-        }
 
         return credentials;
     }
@@ -66,6 +57,11 @@ public class CredentialService {
         credential.setUsername(credentialForm.getUsername());
         credential.setPassword(encryptedPassword);
         return credentialMapper.updateCredential(credential.getUrl(), credential.getUsername(), credential.getPassword(), credentialForm.getCredentialId());
+    }
+
+    // get credential by credentialid
+    public Credential getCredential(int credentialid) {
+        return credentialMapper.getCredential(credentialid);
     }
 
 

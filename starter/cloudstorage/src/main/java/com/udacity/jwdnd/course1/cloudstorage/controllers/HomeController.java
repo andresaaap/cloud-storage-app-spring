@@ -1,10 +1,7 @@
 package com.udacity.jwdnd.course1.cloudstorage.controllers;
 
 import com.udacity.jwdnd.course1.cloudstorage.model.*;
-import com.udacity.jwdnd.course1.cloudstorage.services.CredentialService;
-import com.udacity.jwdnd.course1.cloudstorage.services.FileService;
-import com.udacity.jwdnd.course1.cloudstorage.services.NoteService;
-import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
+import com.udacity.jwdnd.course1.cloudstorage.services.*;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -29,13 +26,17 @@ public class HomeController {
     // file service variable
     private FileService fileService;
 
+    // encruption service variable
+    private EncryptionService encryptionService;
+
     // constructor for HomeController
-    public HomeController(NoteService noteService, UserService userService, CredentialService credentialService, FileService fileService) {
+    public HomeController(NoteService noteService, UserService userService, CredentialService credentialService, FileService fileService, EncryptionService encryptionService) {
 
         this.noteService = noteService;
         this.userService = userService;
         this.credentialService = credentialService;
         this.fileService = fileService;
+        this.encryptionService = encryptionService;
     }
 
     @GetMapping("")
@@ -109,6 +110,22 @@ public class HomeController {
 
         return "home";
     }
+
+    @RequestMapping(value = "credentials/decrypt/{credentialid}", method = RequestMethod.GET)
+    public String signup(@PathVariable Integer credentialid, Model model) {
+        // get credential by id
+        Credential credential = credentialService.getCredential(credentialid);
+        // decrypt password
+        String decryptedPassword = encryptionService.decryptValue(credential.getPassword(), credential.getKey());
+        // add decrypted password to model
+        //model.addAttribute("decryptedPassword", decryptedPassword);
+
+        model.addAttribute("credentialForm", new CredentialForm(credential.getCredentialId(), credential.getUrl(), credential.getUsername(), decryptedPassword, credential.getUserId()));
+
+        return "home :: #credentialForm";
+
+    }
+
 
     // PostMapping for adding a file
     @PostMapping("/files/add")

@@ -193,8 +193,8 @@
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <form th:object="${credentialForm}" th:action="@{/home/credentials/add}" action="#" method="POST">
-                                            <input type="hidden" name="credentialId" id="credential-id">
+                                        <form th:object="${credentialForm}" th:action="@{/home/credentials/add}" action="#" method="POST" id="credentialForm">
+                                            <input th:field="*{credentialId}" type="hidden" name="credentialId" id="credential-id">
                                             <div class="form-group">
                                                 <label for="credential-url" class="col-form-label">URL</label>
                                                 <input th:field="*{url}" type="text" name= "url" class="form-control" id="credential-url" maxlength="100" required>
@@ -207,6 +207,7 @@
                                                 <label for="credential-password" class="col-form-label">Password</label>
                                                 <input th:field="*{password}" type="text" name= "password" class="form-control" id="credential-password" maxlength="30" required>
                                             </div>
+
                                             <button id="credentialSubmit" type="submit" class="d-none"></button>
                                         </form>
                                     </div>
@@ -222,7 +223,8 @@
             </div>
         </div>
 
-        <script th:src="@{/js/jquery-slim.min.js}"></script>
+
+        <script th:src="@{/js/jquery-3.7.0.min.js}"></script>
         <script th:src="@{/js/popper.min.js}"></script>
         <script th:src="@{/js/bootstrap.min.js}"></script>
 
@@ -246,8 +248,22 @@
                 $('#credential-id').val(credentialId ? credentialId : '');
                 $('#credential-url').val(url ? url : '');
                 $('#credential-username').val(username ? username : '');
-                $('#credential-password').val(password ? password : '');
+                // call method that makes ajax call to decrypt password
+                $('#credential-password').val(password ? decryptPassword(credentialId) : '');
+
                 $('#credentialModal').modal('show');
+            }
+
+            // For decrypting the password
+            function decryptPassword(credentialId) {
+                // ajax call to decrypt password
+                $.ajax({
+                    url: '/home/credentials/decrypt/' + credentialId,
+                    type: 'GET',
+                    success: function (data) {
+                        $("#credentialForm").replaceWith(data);
+                    }
+                });
             }
         </script>
     </body>
