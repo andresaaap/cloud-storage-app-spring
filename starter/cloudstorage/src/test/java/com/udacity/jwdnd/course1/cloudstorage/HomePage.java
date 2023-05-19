@@ -287,6 +287,33 @@ public class HomePage {
         deleteCredentialButton.click();
     }
 
+    public void editCredentialById(Integer credentialId, String url, String username, String password) {
+        WebDriverWait wait = new WebDriverWait(driver, 2);
+        // wait until the nav-notes-tab is clickable and click it
+        wait.until(ExpectedConditions.elementToBeClickable(navCredentialsTab));
+        navCredentialsTab.click();
+
+        // wait until the note with id noteId is visible
+        WebElement credential = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credential-"+credentialId.toString())));
+
+        // wait until the button of note is clickable
+        WebElement editCredentialButton = wait.until(ExpectedConditions.elementToBeClickable(credential.findElement(By.tagName("button"))));
+        editCredentialButton.click();
+
+        wait.until(ExpectedConditions.visibilityOfElementLocated(credentialUrlBy));
+        credentialUrl.clear();
+        credentialUrl.sendKeys(url);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(credentialUsernameBy));
+        credentialUsername.clear();
+        credentialUsername.sendKeys(username);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(credentialPasswordBy));
+        credentialPassword.clear();
+        credentialPassword.sendKeys(password);
+
+        wait.until(ExpectedConditions.elementToBeClickable(credentialSubmit));
+        credentialSubmit.click();
+    }
+
     public boolean isCredentialPresentById(Integer credentialId) {
         WebDriverWait wait = new WebDriverWait(driver, 2);
         // wait until the nav-notes-tab is clickable and click it
@@ -304,6 +331,26 @@ public class HomePage {
         } catch (NoSuchElementException e) {
             return false;
         }
+    }
+
+    public String checkDecryptedPassword(Integer credentialId) {
+        WebDriverWait wait = new WebDriverWait(driver, 5);
+        // wait until the nav-notes-tab is clickable and click it
+        wait.until(ExpectedConditions.elementToBeClickable(navCredentialsTab));
+        navCredentialsTab.click();
+
+        // wait until the note with id noteId is visible
+        WebElement credential = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credential-"+credentialId.toString())));
+
+        // wait until edit button in the note is clickable
+        WebElement editCredentialButton = wait.until(ExpectedConditions.elementToBeClickable(credential.findElement(By.tagName("button"))));
+        editCredentialButton.click();
+
+        // wait until the password in the modal is visible
+        wait.until(ExpectedConditions.visibilityOfElementLocated(credentialPasswordBy));
+
+        // return the combined text of the note
+        return credentialPassword.getAttribute("value");
     }
 
 }

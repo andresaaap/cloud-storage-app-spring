@@ -1,5 +1,8 @@
 package com.udacity.jwdnd.course1.cloudstorage;
 
+import com.udacity.jwdnd.course1.cloudstorage.mappers.CredentialMapper;
+import com.udacity.jwdnd.course1.cloudstorage.services.CredentialService;
+import com.udacity.jwdnd.course1.cloudstorage.services.EncryptionService;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
@@ -9,7 +12,9 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.web.server.LocalServerPort;
 
 import java.io.File;
@@ -20,6 +25,9 @@ class CloudStorageApplicationTests {
 	private int port;
 
 	private WebDriver driver;
+
+	@Autowired
+	private CredentialService credentialService;
 
 	@BeforeAll
 	static void beforeAll() {
@@ -345,6 +353,45 @@ class CloudStorageApplicationTests {
 		homePage.deleteCredentialById(1);
 		// verify that the credential is deleted
 		Assertions.assertFalse(homePage.isCredentialPresentById(1));
+	}
+
+	@Test
+	public void testUpdateCredential(){
+		driver.get("http://localhost:" + this.port + "/signup");
+		SignupPage signupPage = new SignupPage(driver, port);
+		signupPage = signupPage.signup("user2", "pass2", "firstname2", "lastname2");
+		LoginPage loginPage = signupPage.goToLoginPage();
+		HomePage homePage = loginPage.login("user2", "pass2");
+
+		// create credential
+		String url = "www.google.com";
+		String username = "user";
+		String password = "messi";
+		homePage.addCredential(url, username, password);
+
+		// update credential
+		String url2 = "www.facebook.com";
+		String username2 = "user2";
+		String password2 = "ronaldo";
+
+		homePage.editCredentialById(1, url2, username2, password2);
+
+		// get the credential text
+		String realCredentialText = homePage.findCredentialById(1);
+
+		// get encrypted password of the credential by id 1
+		String encryptedPassword2 = credentialService.getCredential(1).getPassword();
+		// combine the url, username, and password into one string
+		String credentialText = url2 + " " + username2 + " " + encryptedPassword2;
+		// assert if credential text is the same
+		Assertions.assertEquals(credentialText, realCredentialText);
+
+		// check the decrypted password
+		String decryptedPassword = homePage.checkDecryptedPassword(1);
+
+		// assert if decrypted password is the same
+		Assertions.assertEquals(password2, decryptedPassword);
+
 	}
 
 
