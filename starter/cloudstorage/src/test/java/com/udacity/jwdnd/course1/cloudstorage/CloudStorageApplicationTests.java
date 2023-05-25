@@ -432,7 +432,7 @@ class CloudStorageApplicationTests {
 		Assertions.assertEquals(credentialText, realCredentialText);
 
 		// check the decrypted password
-		String decryptedPassword = homePage.checkDecryptedPassword(1);
+		String decryptedPassword = homePage.checkDecryptedPasswordByOrder(0);
 
 		// assert if decrypted password is the same
 		Assertions.assertEquals(password2, decryptedPassword);
