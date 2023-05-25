@@ -49,6 +49,11 @@ public class CredentialService {
         return credentialMapper.deleteCredential(credentialid);
     }
 
+    // get all credentials by userid
+    public List<Credential> getCredentialsByUserId(int userid) {
+        return credentialMapper.getCredentialsByUserId(userid);
+    }
+
     // update credential by credentialid
     public int updateCredential(CredentialForm credentialForm) {
         Credential credential = credentialMapper.getCredential(credentialForm.getCredentialId());
@@ -63,6 +68,5 @@ public class CredentialService {
     public Credential getCredential(int credentialid) {
         return credentialMapper.getCredential(credentialid);
     }
-
 
 }

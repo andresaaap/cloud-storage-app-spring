@@ -77,7 +77,7 @@
                                 </thead>
                                 <tbody>
                                 <!-- create a row for each note in notes use Thymeleaf -->
-                                    <tr th:each="note : ${notes}" th:id="'note-' + ${note.noteid}">
+                                    <tr th:each="note : ${notes}" th:id="'note-' + ${note.noteid}" >
                                         <td>
                                             <button type="button" class="btn btn-success" th:onclick="showNoteEditModal( [[${note.getNoteid()}]],[[${note.getNotetitle()}]],[[${note.getNotedescription()}]] )">Edit</button>
                                             <a class="btn btn-danger" th:href="@{'/home/notes/delete/' + ${note.noteid}}" action="#">Delete</a>
@@ -181,6 +181,11 @@
                                 </tr>
                                 </tbody>
                             </table>
+                        </div>
+
+                        <!-- show a h3 tag with the content of the message in model -->
+                        <div th:if="${message}" class="alert alert-success" role="alert">
+                            <p th:text="${message}"></p>
                         </div>
 
                         <div class="modal fade" id="credentialModal" tabindex="-1" role="dialog" aria-labelledby="credentialModalLabel" aria-hidden="true">

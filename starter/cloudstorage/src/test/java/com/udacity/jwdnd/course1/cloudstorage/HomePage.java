@@ -9,6 +9,8 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.util.List;
+
 public class HomePage {
 
     // variable find by xpath a button inside the div with id logoutDiv
@@ -154,16 +156,23 @@ public class HomePage {
     }
 
     // method to get note title
-    public String findNoteById(Integer noteId) {
+    public String findNoteByOrder(Integer noteOrder) {
         WebDriverWait wait = new WebDriverWait(driver, 5);
         // wait until the nav-notes-tab is clickable and click it
         wait.until(ExpectedConditions.elementToBeClickable(navNotesTab));
         navNotesTab.click();
 
-        // wait until the note with id noteId is visible
-        WebElement note = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("note-"+noteId.toString())));
+        // wait until the table with the notes is visible
+        WebElement notesTable = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("userTable")));
 
-        // get web element of the note with id note-1
+        // get the tbody tag in notesTable
+        WebElement tbody = notesTable.findElement(By.tagName("tbody"));
+
+        // get all the rows in tbody
+        List<WebElement> notes = tbody.findElements(By.tagName("tr"));
+
+        // get the note with order noteOrder
+        WebElement note = notes.get(noteOrder);
         // get the text of the th tag of the note
         WebElement noteTitle = note.findElements(By.tagName("th")).get(0);
         WebElement noteDescription = note.findElements(By.tagName("td")).get(1);
@@ -172,14 +181,23 @@ public class HomePage {
     }
 
     // method editNoteById
-    public void editNoteById(Integer noteId, String title, String description) {
+    public void editNoteByOrder(Integer noteOrder, String title, String description) {
         WebDriverWait wait = new WebDriverWait(driver, 2);
         // wait until the nav-notes-tab is clickable and click it
         wait.until(ExpectedConditions.elementToBeClickable(navNotesTab));
         navNotesTab.click();
 
-        // wait until the note with id noteId is visible
-        WebElement note = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("note-"+noteId.toString())));
+        // wait until the table with the notes is visible
+        WebElement notesTable = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("userTable")));
+
+        // get the tbody tag in notesTable
+        WebElement tbody = notesTable.findElement(By.tagName("tbody"));
+
+        // get all the rows in tbody
+        List<WebElement> notes = tbody.findElements(By.tagName("tr"));
+
+        // get the note with order noteOrder
+        WebElement note = notes.get(noteOrder);
 
         // wait until the button of note is clickable
         WebElement editNoteButton = wait.until(ExpectedConditions.elementToBeClickable(note.findElement(By.tagName("button"))));
@@ -196,37 +214,50 @@ public class HomePage {
         noteEditSubmit.click();
     }
 
-    public void deleteNoteById(Integer noteId) {
+    public void deleteNoteByOrder(Integer noteOrder) {
         WebDriverWait wait = new WebDriverWait(driver, 2);
         // wait until the nav-notes-tab is clickable and click it
         wait.until(ExpectedConditions.elementToBeClickable(navNotesTab));
         navNotesTab.click();
 
-        // wait until the note with id noteId is visible
-        WebElement note = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("note-"+noteId.toString())));
+        // wait until the table with the notes is visible
+        WebElement notesTable = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("userTable")));
+
+        // get the tbody tag in notesTable
+        WebElement tbody = notesTable.findElement(By.tagName("tbody"));
+
+        // get all the rows in tbody
+        List<WebElement> notes = tbody.findElements(By.tagName("tr"));
+
+        // get the note with order noteOrder
+        WebElement note = notes.get(noteOrder);
 
         // wait until the button of note is clickable
         WebElement deleteNoteButton = wait.until(ExpectedConditions.elementToBeClickable(note.findElement(By.tagName("a"))));
         deleteNoteButton.click();
     }
 
-    public boolean isNotePresentById(Integer noteId) {
+    public boolean isNotePresentByTitle(String noteTitle) {
         WebDriverWait wait = new WebDriverWait(driver, 2);
         // wait until the nav-notes-tab is clickable and click it
         wait.until(ExpectedConditions.elementToBeClickable(navNotesTab));
         navNotesTab.click();
 
-        // wait until the note table is visible
-        WebElement noteTable = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("userTable")));
+        // wait until the table with the notes is visible
+        WebElement notesTable = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("userTable")));
 
-        // if there is a note with id noteId, return true
-        // else return false
-        try {
-            noteTable.findElement(By.id("note-"+noteId.toString()));
-            return true;
-        } catch (NoSuchElementException e) {
-            return false;
+        // get the tbody tag in notesTable
+        WebElement tbody = notesTable.findElement(By.tagName("tbody"));
+
+        // find a note with title noteTitle in one of the rows in tbody
+        List<WebElement> notes = tbody.findElements(By.tagName("tr"));
+        for (WebElement note : notes) {
+            WebElement noteTitleElement = note.findElements(By.tagName("th")).get(0);
+            if (noteTitleElement.getText().equals(noteTitle)) {
+                return true;
+            }
         }
+        return false;
     }
 
     public void addCredential(String url, String username, String password) {
@@ -255,14 +286,21 @@ public class HomePage {
         credentialSubmit.click();
     }
 
-    public String findCredentialById(Integer credentialId) {
+    public String findCredentialByOrder(Integer credentialOrder) {
         WebDriverWait wait = new WebDriverWait(driver, 5);
         // wait until the nav-notes-tab is clickable and click it
         wait.until(ExpectedConditions.elementToBeClickable(navCredentialsTab));
         navCredentialsTab.click();
 
-        // wait until the note with id noteId is visible
-        WebElement credential = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credential-"+credentialId.toString())));
+        // wait until the table with the credentials is visible
+        WebElement credentialsTable = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credentialTable")));
+        // get the tbody tag in credentialsTable
+        WebElement tbody = credentialsTable.findElement(By.tagName("tbody"));
+        // get all the rows in tbody
+        List<WebElement> credentials = tbody.findElements(By.tagName("tr"));
+        // get the credential with order credentialOrder
+        WebElement credential = credentials.get(credentialOrder);
+
 
         // get web element of the note with id note-1
         // get the text of the th tag of the note
@@ -273,14 +311,20 @@ public class HomePage {
         return credentialUrl.getText() + " " + credentialUsername.getText() + " " + credentialPassword.getText();
     }
 
-    public void deleteCredentialById(Integer credentialId) {
+    public void deleteCredentialByOrder(Integer credentialOrder) {
         WebDriverWait wait = new WebDriverWait(driver, 2);
         // wait until the nav-notes-tab is clickable and click it
         wait.until(ExpectedConditions.elementToBeClickable(navCredentialsTab));
         navCredentialsTab.click();
 
-        // wait until the note with id noteId is visible
-        WebElement credential = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credential-"+credentialId.toString())));
+        // wait until the table with the credentials is visible
+        WebElement credentialsTable = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credentialTable")));
+        // get the tbody tag in credentialsTable
+        WebElement tbody = credentialsTable.findElement(By.tagName("tbody"));
+        // get all the rows in tbody
+        List<WebElement> credentials = tbody.findElements(By.tagName("tr"));
+        // get the credential with order credentialOrder
+        WebElement credential = credentials.get(credentialOrder);
 
         // wait until the button of note is clickable
         WebElement deleteCredentialButton = wait.until(ExpectedConditions.elementToBeClickable(credential.findElement(By.tagName("a"))));
@@ -314,7 +358,7 @@ public class HomePage {
         credentialSubmit.click();
     }
 
-    public boolean isCredentialPresentById(Integer credentialId) {
+    public boolean isCredentialPresentByContents(String contents) {
         WebDriverWait wait = new WebDriverWait(driver, 2);
         // wait until the nav-notes-tab is clickable and click it
         wait.until(ExpectedConditions.elementToBeClickable(navCredentialsTab));
@@ -322,15 +366,24 @@ public class HomePage {
 
         // wait until the note table is visible
         WebElement credentialTable = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credentialTable")));
+        // get the tbody tag in credentialTable
+        WebElement tbody = credentialTable.findElement(By.tagName("tbody"));
 
-        // if there is a note with id noteId, return true
-        // else return false
-        try {
-            credentialTable.findElement(By.id("credential-"+credentialId.toString()));
-            return true;
-        } catch (NoSuchElementException e) {
-            return false;
+        // find a credential with the contents in one of the rows in tbody
+        List<WebElement> credentials = tbody.findElements(By.tagName("tr"));
+        for (WebElement credential : credentials) {
+            WebElement credentialUrl = credential.findElements(By.tagName("th")).get(0);
+            WebElement credentialUsername = credential.findElements(By.tagName("td")).get(1);
+            WebElement credentialPassword = credential.findElements(By.tagName("td")).get(2);
+            // combine the credential contents
+            String credentialContents = credentialUrl.getText() + " " + credentialUsername.getText() + " " + credentialPassword.getText();
+            // if the credential contents is equal to the contents, return true
+            if (credentialContents.equals(contents)) {
+                return true;
+            }
         }
+        // if no credential is found, return false
+        return false;
     }
 
     public String checkDecryptedPassword(Integer credentialId) {

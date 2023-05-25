@@ -1,8 +1,10 @@
 package com.udacity.jwdnd.course1.cloudstorage;
 
 import com.udacity.jwdnd.course1.cloudstorage.mappers.CredentialMapper;
-import com.udacity.jwdnd.course1.cloudstorage.services.CredentialService;
-import com.udacity.jwdnd.course1.cloudstorage.services.EncryptionService;
+import com.udacity.jwdnd.course1.cloudstorage.model.Credential;
+import com.udacity.jwdnd.course1.cloudstorage.model.Note;
+import com.udacity.jwdnd.course1.cloudstorage.model.User;
+import com.udacity.jwdnd.course1.cloudstorage.services.*;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
@@ -17,7 +19,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.web.server.LocalServerPort;
 
-import java.io.File;
+// import class File with the name FileStorage
+import com.udacity.jwdnd.course1.cloudstorage.model.File;
+
+import java.util.List;
+
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CloudStorageApplicationTests {
 
@@ -28,6 +34,15 @@ class CloudStorageApplicationTests {
 
 	@Autowired
 	private CredentialService credentialService;
+
+	@Autowired
+	private UserService userService;
+
+	@Autowired
+	private NoteService noteService;
+
+	@Autowired
+	private FileService fileService;
 
 	@BeforeAll
 	static void beforeAll() {
@@ -43,6 +58,23 @@ class CloudStorageApplicationTests {
 	public void afterEach() {
 		if (this.driver != null) {
 			driver.quit();
+		}
+
+		// get all users, loop through them and delete them
+		for (User user : userService.getAllUsers()) {
+			// get all notes for user, loop through them and delete them
+			for (Note note : noteService.getNotesByUserId(user.getUserid())) {
+				noteService.deleteNoteById(note.getNoteid());
+			}
+			// get all credentials for user, loop through them and delete them
+			for (Credential credential : credentialService.getCredentialsByUserId(user.getUserid())) {
+				credentialService.deleteCredential(credential.getCredentialId());
+			}
+			// get all files for user, loop through them and delete them
+			for (File file : fileService.getFilesByUserId(user.getUserid())) {
+				fileService.deleteFile(file.getFileId());
+			}
+			userService.deleteUser(user.getUserid());
 		}
 	}
 
@@ -195,7 +227,7 @@ class CloudStorageApplicationTests {
 
 		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("fileUpload")));
 		WebElement fileSelectButton = driver.findElement(By.id("fileUpload"));
-		fileSelectButton.sendKeys(new File(fileName).getAbsolutePath());
+		fileSelectButton.sendKeys(new java.io.File(fileName).getAbsolutePath());
 
 		WebElement uploadButton = driver.findElement(By.id("uploadButton"));
 		uploadButton.click();
@@ -253,7 +285,7 @@ class CloudStorageApplicationTests {
 		String noteDescription = "milk, eggs, bread";
 
 		homePage.addNote(noteTitle, noteDescription);
-		String realNoteText = homePage.findNoteById(1);
+		String realNoteText = homePage.findNoteByOrder(0);
 
 		// combine the noteTitle and noteDescription into one string
 		String noteText = noteTitle + " " + noteDescription;
@@ -280,8 +312,8 @@ class CloudStorageApplicationTests {
 
 		String noteTitle2 = "grocery list fruits";
 		String noteDescription2 = "bananas, apples, oranges";
-		homePage.editNoteById(1, noteTitle2, noteDescription2);
-		String realNoteText = homePage.findNoteById(1);
+		homePage.editNoteByOrder(0, noteTitle2, noteDescription2);
+		String realNoteText = homePage.findNoteByOrder(0);
 
 		// combine the noteTitle and noteDescription into one string
 		String noteText2 = noteTitle2 + " " + noteDescription2;
@@ -306,9 +338,9 @@ class CloudStorageApplicationTests {
 		homePage.addNote(noteTitle, noteDescription);
 
 		// delete note
-		homePage.deleteNoteById(1);
+		homePage.deleteNoteByOrder(0);
 		// verify that the note is deleted
-		Assertions.assertFalse(homePage.isNotePresentById(1));
+		Assertions.assertFalse(homePage.isNotePresentByTitle(noteTitle));
 	}
 
 	@Test
@@ -326,10 +358,16 @@ class CloudStorageApplicationTests {
 		homePage.addCredential(url, username, password);
 
 		// get the credential text
-		String realCredentialText = homePage.findCredentialById(1);
+		String realCredentialText = homePage.findCredentialByOrder(0);
+
+		// get all the credentials using the credential service
+		List<Credential> credentials = credentialService.getCredentials();
+
+		// get encrypted password
+		String encryptedPassword = credentials.get(0).getPassword();
 
 		// combine the url, username, and password into one string
-		String credentialText = url + " " + username + " " + password;
+		String credentialText = url + " " + username + " " + encryptedPassword;
 
 		// assert if credential text is the same
 		Assertions.assertEquals(credentialText, realCredentialText);
@@ -349,10 +387,13 @@ class CloudStorageApplicationTests {
 		String password = "pass";
 		homePage.addCredential(url, username, password);
 
+		// combine the url, username, and password into one string
+		String credentialText = url + " " + username + " " + password;
+
 		// delete credential
-		homePage.deleteCredentialById(1);
+		homePage.deleteCredentialByOrder(0);
 		// verify that the credential is deleted
-		Assertions.assertFalse(homePage.isCredentialPresentById(1));
+		Assertions.assertFalse(homePage.isCredentialPresentByContents(credentialText));
 	}
 
 	@Test
@@ -377,7 +418,7 @@ class CloudStorageApplicationTests {
 		homePage.editCredentialById(1, url2, username2, password2);
 
 		// get the credential text
-		String realCredentialText = homePage.findCredentialById(1);
+		String realCredentialText = homePage.findCredentialByOrder(1);
 
 		// get encrypted password of the credential by id 1
 		String encryptedPassword2 = credentialService.getCredential(1).getPassword();
@@ -392,6 +433,26 @@ class CloudStorageApplicationTests {
 		// assert if decrypted password is the same
 		Assertions.assertEquals(password2, decryptedPassword);
 
+	}
+
+	@Test
+	public void testDeleteUser(){
+		driver.get("http://localhost:" + this.port + "/signup");
+		SignupPage signupPage = new SignupPage(driver, port);
+		signupPage = signupPage.signup("user2", "pass2", "firstname2", "lastname2");
+		LoginPage loginPage = signupPage.goToLoginPage();
+		HomePage homePage = loginPage.login("user2", "pass2");
+
+		// logout user
+		loginPage = homePage.logout();
+
+		// delete user
+		userService.deleteUser(1);
+		// get user by id
+		User user = userService.getUserById(1);
+
+		// assert if user is null
+		Assertions.assertNull(user);
 	}
 
 

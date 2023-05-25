@@ -13,6 +13,9 @@ public interface CredentialMapper {
     // create a method called getCredential in mybatis
     @Select("SELECT * FROM CREDENTIALS WHERE credentialid = #{credentialid}")
     Credential getCredential(int credentialid);
+    // get all credentials by userid in mybatis
+    @Select("SELECT * FROM CREDENTIALS WHERE userid = #{userid}")
+    List<Credential> getCredentialsByUserId(int userid);
     // insert a credential with a url, username, key, password, and userid in mybatis
     @Insert("INSERT INTO CREDENTIALS (url, username, key, password, userid) VALUES (#{url}, #{username}, #{key}, #{password}, #{userId})")
     int insertCredential(Credential credential);

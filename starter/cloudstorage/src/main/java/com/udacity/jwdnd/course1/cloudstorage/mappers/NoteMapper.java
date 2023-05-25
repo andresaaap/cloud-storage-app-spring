@@ -14,6 +14,9 @@ public interface NoteMapper {
     // select all botes using mybatis
     @Select("SELECT * FROM NOTES")
     List<Note> getNotes();
+    // select all notes by userid using mybatis
+    @Select("SELECT * FROM NOTES WHERE userid = #{userid}")
+    List<Note> getNotesByUserId(Integer userid);
     // insert note using mybatis
     @Insert("INSERT INTO NOTES (notetitle, notedescription, userid) VALUES (#{notetitle}, #{notedescription}, #{userid})")
     @Options(useGeneratedKeys = true, keyProperty = "noteid")

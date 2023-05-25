@@ -31,6 +31,11 @@ public class FileService {
         return fileMapper.getFile(fileId);
     }
 
+    // create a method to get a file by userId
+    public List<File> getFilesByUserId(Integer userId) {
+        return fileMapper.getFilesByUserId(userId);
+    }
+
     // delete file by fileId
     public Integer deleteFile(Integer fileId) {
         return fileMapper.deleteFile(fileId);

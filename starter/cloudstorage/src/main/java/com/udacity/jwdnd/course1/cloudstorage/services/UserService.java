@@ -1,11 +1,13 @@
 package com.udacity.jwdnd.course1.cloudstorage.services;
 
 import com.udacity.jwdnd.course1.cloudstorage.mappers.UserMapper;
+import com.udacity.jwdnd.course1.cloudstorage.model.Note;
 import com.udacity.jwdnd.course1.cloudstorage.model.User;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
 import java.util.Base64;
+import java.util.List;
 
 @Service
 public class UserService {
@@ -45,6 +47,21 @@ public class UserService {
     // get user by username
     public User getUser(String username) {
         return userMapper.getUser(username);
+    }
+
+    // get user by userid
+    public User getUserById(Integer userId) {
+        return userMapper.getUserById(userId);
+    }
+
+    // delete user
+    public void deleteUser(Integer userId) {
+        userMapper.deleteUser(userId);
+    }
+
+    // get all users
+    public List<User> getAllUsers() {
+        return userMapper.getAllUsers();
     }
 
 }

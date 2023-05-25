@@ -24,6 +24,11 @@ public class NoteService {
         return noteMapper.getNotes();
     }
 
+    // method to get all notes by userid
+    public List<Note> getNotesByUserId(Integer userid) {
+        return noteMapper.getNotesByUserId(userid);
+    }
+
     // method to add note
     public int addNote (NoteForm noteForm) {
         Note note = new Note(null, noteForm.getNotetitle(), noteForm.getNotedescription(), noteForm.getUserid());
