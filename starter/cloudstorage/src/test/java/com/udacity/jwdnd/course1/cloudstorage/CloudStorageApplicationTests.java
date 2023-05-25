@@ -415,13 +415,17 @@ class CloudStorageApplicationTests {
 		String username2 = "user2";
 		String password2 = "ronaldo";
 
-		homePage.editCredentialById(1, url2, username2, password2);
+		homePage.editCredentialByOrder(0, url2, username2, password2);
 
 		// get the credential text
-		String realCredentialText = homePage.findCredentialByOrder(1);
+		String realCredentialText = homePage.findCredentialByOrder(0);
 
-		// get encrypted password of the credential by id 1
-		String encryptedPassword2 = credentialService.getCredential(1).getPassword();
+		// get all the credentials using the credential service
+		List<Credential> credentials = credentialService.getCredentials();
+
+		// get encrypted password
+		String encryptedPassword2 = credentials.get(0).getPassword();
+
 		// combine the url, username, and password into one string
 		String credentialText = url2 + " " + username2 + " " + encryptedPassword2;
 		// assert if credential text is the same

@@ -331,14 +331,20 @@ public class HomePage {
         deleteCredentialButton.click();
     }
 
-    public void editCredentialById(Integer credentialId, String url, String username, String password) {
+    public void editCredentialByOrder(Integer credentialOrder, String url, String username, String password) {
         WebDriverWait wait = new WebDriverWait(driver, 2);
         // wait until the nav-notes-tab is clickable and click it
         wait.until(ExpectedConditions.elementToBeClickable(navCredentialsTab));
         navCredentialsTab.click();
 
-        // wait until the note with id noteId is visible
-        WebElement credential = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credential-"+credentialId.toString())));
+        // wait until the table with the credentials is visible
+        WebElement credentialsTable = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credentialTable")));
+        // get the tbody tag in credentialsTable
+        WebElement tbody = credentialsTable.findElement(By.tagName("tbody"));
+        // get all the rows in tbody
+        List<WebElement> credentials = tbody.findElements(By.tagName("tr"));
+        // get the credential with order credentialOrder
+        WebElement credential = credentials.get(credentialOrder);
 
         // wait until the button of note is clickable
         WebElement editCredentialButton = wait.until(ExpectedConditions.elementToBeClickable(credential.findElement(By.tagName("button"))));
