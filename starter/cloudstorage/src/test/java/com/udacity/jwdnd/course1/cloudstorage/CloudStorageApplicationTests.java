@@ -361,7 +361,7 @@ class CloudStorageApplicationTests {
 		String realCredentialText = homePage.findCredentialByOrder(0);
 
 		// get all the credentials using the credential service
-		List<Credential> credentials = credentialService.getCredentials();
+		List<Credential> credentials = credentialService.getAllCredentials();
 
 		// get encrypted password
 		String encryptedPassword = credentials.get(0).getPassword();
@@ -421,7 +421,7 @@ class CloudStorageApplicationTests {
 		String realCredentialText = homePage.findCredentialByOrder(0);
 
 		// get all the credentials using the credential service
-		List<Credential> credentials = credentialService.getCredentials();
+		List<Credential> credentials = credentialService.getAllCredentials();
 
 		// get encrypted password
 		String encryptedPassword2 = credentials.get(0).getPassword();

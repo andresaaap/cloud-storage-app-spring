@@ -16,6 +16,9 @@ public interface CredentialMapper {
     // get all credentials by userid in mybatis
     @Select("SELECT * FROM CREDENTIALS WHERE userid = #{userid}")
     List<Credential> getCredentialsByUserId(int userid);
+    // get all credentials in mybatis
+    @Select("SELECT * FROM CREDENTIALS")
+    List<Credential> getAllCredentials();
 
     // get a credential by username and userid in mybatis
     @Select("SELECT * FROM CREDENTIALS WHERE username = #{username} AND userid = #{userid}")

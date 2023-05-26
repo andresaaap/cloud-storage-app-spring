@@ -22,9 +22,15 @@ public class CredentialService {
         this.encryptionService = encryptionService;
     }
 
-    // get all credentials
+    // get credentials by userid
     public List<Credential> getCredentials(Integer userid) {
         List<Credential> credentials = credentialMapper.getCredentials(userid);
+
+        return credentials;
+    }
+
+    public List<Credential> getAllCredentials() {
+        List<Credential> credentials = credentialMapper.getAllCredentials();
 
         return credentials;
     }
