@@ -8,8 +8,8 @@ import java.util.List;
 @Mapper
 public interface CredentialMapper {
     // get all credentials in mybatis
-    @Select("SELECT * FROM CREDENTIALS")
-    List<Credential> getCredentials();
+    @Select("SELECT * FROM CREDENTIALS WHERE userid = #{userid}")
+    List<Credential> getCredentials(Integer userid);
     // create a method called getCredential in mybatis
     @Select("SELECT * FROM CREDENTIALS WHERE credentialid = #{credentialid}")
     Credential getCredential(int credentialid);

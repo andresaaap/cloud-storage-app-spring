@@ -23,8 +23,8 @@ public class CredentialService {
     }
 
     // get all credentials
-    public List<Credential> getCredentials() {
-        List<Credential> credentials = credentialMapper.getCredentials();
+    public List<Credential> getCredentials(Integer userid) {
+        List<Credential> credentials = credentialMapper.getCredentials(userid);
 
         return credentials;
     }

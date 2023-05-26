@@ -47,11 +47,12 @@ public class HomeController implements HandlerExceptionResolver {
     }
 
     @GetMapping("")
-    public String homeView(NoteForm noteForm, CredentialForm credentialForm, Model model) {
+    public String homeView(Authentication authentication, NoteForm noteForm, CredentialForm credentialForm, Model model) {
+        User currentUser = userService.getUser(authentication.getName());
         // add to model an attibute called notes with the value of noteService.getNotes()
-        model.addAttribute("notes", noteService.getNotes());
-        model.addAttribute("credentials", credentialService.getCredentials());
-        model.addAttribute("files", fileService.getFiles());
+        model.addAttribute("notes", noteService.getNotes(currentUser.getUserid()));
+        model.addAttribute("credentials", credentialService.getCredentials(currentUser.getUserid()));
+        model.addAttribute("files", fileService.getFiles(currentUser.getUserid()));
         return "home";
     }
 
@@ -61,7 +62,7 @@ public class HomeController implements HandlerExceptionResolver {
         User currentUser = userService.getUser(authentication.getName());
         noteForm.setUserid(currentUser.getUserid());
         noteService.addNote(noteForm);
-        model.addAttribute("notes", noteService.getNotes());
+        model.addAttribute("notes", noteService.getNotes(currentUser.getUserid()));
         model.addAttribute("credentialForm", new CredentialForm(null, null, null, null, null));
         // On successful note addition, add a success message to the model
         model.addAttribute("successNoteAction", "Note added successfully!");
@@ -70,9 +71,10 @@ public class HomeController implements HandlerExceptionResolver {
 
     //PutMapping for updating a note using the endpoint /notes/update/{noteid}
     @GetMapping("/notes/update")
-    public String updateNoteById(NoteForm noteForm, Model model) {
+    public String updateNoteById(Authentication authentication, NoteForm noteForm, Model model) {
+        User currentUser = userService.getUser(authentication.getName());
         noteService.updateNoteById(noteForm);
-        model.addAttribute("notes", noteService.getNotes());
+        model.addAttribute("notes", noteService.getNotes(currentUser.getUserid()));
         model.addAttribute("credentialForm", new CredentialForm(null, null, null, null, null));
         // On successful note addition, add a success message to the model
         model.addAttribute("successNoteAction", "Note updated successfully!");
@@ -82,9 +84,10 @@ public class HomeController implements HandlerExceptionResolver {
 
     //Delete mapping for deleting a note by id
     @GetMapping("/notes/delete/{noteid}")
-    public String deleteNoteById(@PathVariable Integer noteid, NoteForm noteForm, Model model) {
+    public String deleteNoteById(Authentication authentication, @PathVariable Integer noteid, NoteForm noteForm, Model model) {
+        User currentUser = userService.getUser(authentication.getName());
         noteService.deleteNoteById(noteid);
-        model.addAttribute("notes", noteService.getNotes());
+        model.addAttribute("notes", noteService.getNotes(currentUser.getUserid()));
         model.addAttribute("credentialForm", new CredentialForm(null, null, null, null, null));
         // On successful note deletion, add a success message to the model
         model.addAttribute("successNoteAction", "Note deleted successfully!");
@@ -94,16 +97,17 @@ public class HomeController implements HandlerExceptionResolver {
     // PostMapping for adding a credential
     @PostMapping("/credentials/add")
     public String addCredential(Authentication authentication, CredentialForm credentialForm, Model model) {
+        User currentUser = userService.getUser(authentication.getName());
         if(credentialForm.getCredentialId() != null) {
             credentialService.updateCredential(credentialForm);
-            model.addAttribute("credentials", credentialService.getCredentials());
+            model.addAttribute("credentials", credentialService.getCredentials(currentUser.getUserid()));
             // add attribute to model called noteForm with the value of new NoteForm() initialized with null values
             model.addAttribute("noteForm", new NoteForm(null, null, null, null));
             // on successful credential update, add a success message to the model
             model.addAttribute("successCredentialAction", "Credential updated successfully!");
         }
         else {
-            User currentUser = userService.getUser(authentication.getName());
+
             credentialForm.setUserId(currentUser.getUserid());
             try {
                 credentialService.addCredential(credentialForm);
@@ -112,7 +116,7 @@ public class HomeController implements HandlerExceptionResolver {
             catch (Exception e) {
                 model.addAttribute("errorCredentialAction", e.getMessage());
             }
-            model.addAttribute("credentials", credentialService.getCredentials());
+            model.addAttribute("credentials", credentialService.getCredentials(currentUser.getUserid()));
             // add attribute to model called noteForm with the value of new NoteForm() initialized with null values
             model.addAttribute("noteForm", new NoteForm(null, null, null, null));
         }
@@ -122,9 +126,10 @@ public class HomeController implements HandlerExceptionResolver {
 
     // GetMapping for deleting a credential by id
     @GetMapping("/credentials/delete/{credentialid}")
-    public String deleteCredentialById(@PathVariable Integer credentialid, CredentialForm credentialForm, Model model) {
+    public String deleteCredentialById(Authentication authentication, @PathVariable Integer credentialid, CredentialForm credentialForm, Model model) {
+        User currentUser = userService.getUser(authentication.getName());
         credentialService.deleteCredential(credentialid);
-        model.addAttribute("credentials", credentialService.getCredentials());
+        model.addAttribute("credentials", credentialService.getCredentials(currentUser.getUserid()));
         // add attribute to model called noteForm with the value of new NoteForm() initialized with null values
         model.addAttribute("noteForm", new NoteForm(null, null, null, null));
         // on successful credential deletion, add a success message to the model
@@ -166,7 +171,7 @@ public class HomeController implements HandlerExceptionResolver {
             model.addAttribute("errorFileAction", e.getMessage());
         }
         // add attribute to model called files with the value of fileService.getFiles()
-        model.addAttribute("files", fileService.getFiles());
+        model.addAttribute("files", fileService.getFiles(currentUser.getUserid()));
         // add attribute to model called noteForm with the value of new NoteForm() initialized with null values
         model.addAttribute("noteForm", new NoteForm(null, null, null, null));
         // add attribute to model called credentialForm with the value of new CredentialForm() initialized with null values
@@ -177,10 +182,11 @@ public class HomeController implements HandlerExceptionResolver {
 
     // GetMapping for deleting a file by id
     @GetMapping("/files/delete/{fileid}")
-    public String deleteFileById(@PathVariable Integer fileid, Model model) {
+    public String deleteFileById(Authentication authentication, @PathVariable Integer fileid, Model model) {
+        User currentUser = userService.getUser(authentication.getName());
         fileService.deleteFile(fileid);
         // add attribute to model called files with the value of fileService.getFiles()
-        model.addAttribute("files", fileService.getFiles());
+        model.addAttribute("files", fileService.getFiles(currentUser.getUserid()));
         // add attribute to model called noteForm with the value of new NoteForm() initialized with null values
         model.addAttribute("noteForm", new NoteForm(null, null, null, null));
         // add attribute to model called credentialForm with the value of new CredentialForm() initialized with null values
@@ -192,9 +198,10 @@ public class HomeController implements HandlerExceptionResolver {
     }
 
     @GetMapping("/files/download/{fileid}")
-    public ResponseEntity downloadFileById(@PathVariable Integer fileid, Model model){
+    public ResponseEntity downloadFileById(Authentication authentication, @PathVariable Integer fileid, Model model){
+        User currentUser = userService.getUser(authentication.getName());
         File file = fileService.getFile(fileid);
-        model.addAttribute("files", fileService.getFiles());
+        model.addAttribute("files", fileService.getFiles(currentUser.getUserid()));
         // add attribute to model called noteForm with the value of new NoteForm() initialized with null values
         model.addAttribute("noteForm", new NoteForm(null, null, null, null));
         // add attribute to model called credentialForm with the value of new CredentialForm() initialized with null values

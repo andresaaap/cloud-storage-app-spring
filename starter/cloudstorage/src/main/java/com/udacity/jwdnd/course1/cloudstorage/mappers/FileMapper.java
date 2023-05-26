@@ -11,8 +11,8 @@ import java.util.List;
 public interface FileMapper {
 
     // get all files called getFiles using mybatis
-    @Select("SELECT * FROM FILES")
-    List<File> getFiles();
+    @Select("SELECT * FROM FILES WHERE userid = #{userId}")
+    List<File> getFiles(Integer userId);
     // select a file by fileId called getFile
     @Select("SELECT * FROM FILES WHERE fileId = #{fileId}")
     File getFile(Integer fileId);

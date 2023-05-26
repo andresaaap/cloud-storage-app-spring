@@ -28,8 +28,8 @@ public class FileService {
     }
 
     // create a method to get all files
-    public List<File> getFiles() {
-        return fileMapper.getFiles();
+    public List<File> getFiles(Integer userId) {
+        return fileMapper.getFiles(userId);
     }
 
     // create a method to get a file by fileId

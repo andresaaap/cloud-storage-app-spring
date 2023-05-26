@@ -12,8 +12,8 @@ public interface NoteMapper {
     @Select("SELECT * FROM NOTES WHERE noteid = #{noteid}")
     Note getNoteByNoteid(int noteid);
     // select all botes using mybatis
-    @Select("SELECT * FROM NOTES")
-    List<Note> getNotes();
+    @Select("SELECT * FROM NOTES WHERE userid = #{userid}")
+    List<Note> getNotes(Integer userid);
     // select all notes by userid using mybatis
     @Select("SELECT * FROM NOTES WHERE userid = #{userid}")
     List<Note> getNotesByUserId(Integer userid);
