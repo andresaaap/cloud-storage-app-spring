@@ -30,8 +30,10 @@ public class CredentialService {
     }
 
     // add new credential and has a parameter of type CredentialForm
-    public int addCredential(CredentialForm credentialForm) {
-
+    public int addCredential(CredentialForm credentialForm) throws RuntimeException {
+        Credential credential = null;
+        // check if the username is unique for the user with the given userid
+        if (credentialMapper.getCredentialByUsername(credentialForm.getUsername(), credentialForm.getUserId()) == null) {
             SecureRandom random = new SecureRandom();
             byte[] key = new byte[16];
             random.nextBytes(key);
@@ -39,8 +41,14 @@ public class CredentialService {
             // encrypt the password
             String encryptedPassword = encryptionService.encryptValue(credentialForm.getPassword(), encodedKey);
             // create a new credential object
-            Credential credential = new Credential(null, credentialForm.getUrl(), credentialForm.getUsername(), encodedKey, encryptedPassword, credentialForm.getUserId());
-            return credentialMapper.insertCredential(credential);
+            credential = new Credential(null, credentialForm.getUrl(), credentialForm.getUsername(), encodedKey, encryptedPassword, credentialForm.getUserId());
+        }
+        // throw an exception if the username is not unique
+        else {
+            throw new RuntimeException("The username already exists for the user.");
+        }
+
+        return credentialMapper.insertCredential(credential);
 
     }
 

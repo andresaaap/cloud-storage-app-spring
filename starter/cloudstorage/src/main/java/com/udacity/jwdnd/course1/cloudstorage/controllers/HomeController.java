@@ -63,6 +63,8 @@ public class HomeController implements HandlerExceptionResolver {
         noteService.addNote(noteForm);
         model.addAttribute("notes", noteService.getNotes());
         model.addAttribute("credentialForm", new CredentialForm(null, null, null, null, null));
+        // On successful note addition, add a success message to the model
+        model.addAttribute("successNoteAction", "Note added successfully!");
         return "home";
     }
 
@@ -72,6 +74,8 @@ public class HomeController implements HandlerExceptionResolver {
         noteService.updateNoteById(noteForm);
         model.addAttribute("notes", noteService.getNotes());
         model.addAttribute("credentialForm", new CredentialForm(null, null, null, null, null));
+        // On successful note addition, add a success message to the model
+        model.addAttribute("successNoteAction", "Note updated successfully!");
 
         return "home";
     }
@@ -82,7 +86,8 @@ public class HomeController implements HandlerExceptionResolver {
         noteService.deleteNoteById(noteid);
         model.addAttribute("notes", noteService.getNotes());
         model.addAttribute("credentialForm", new CredentialForm(null, null, null, null, null));
-
+        // On successful note deletion, add a success message to the model
+        model.addAttribute("successNoteAction", "Note deleted successfully!");
         return "home";
     }
 
@@ -94,11 +99,19 @@ public class HomeController implements HandlerExceptionResolver {
             model.addAttribute("credentials", credentialService.getCredentials());
             // add attribute to model called noteForm with the value of new NoteForm() initialized with null values
             model.addAttribute("noteForm", new NoteForm(null, null, null, null));
+            // on successful credential update, add a success message to the model
+            model.addAttribute("successCredentialAction", "Credential updated successfully!");
         }
         else {
             User currentUser = userService.getUser(authentication.getName());
             credentialForm.setUserId(currentUser.getUserid());
-            credentialService.addCredential(credentialForm);
+            try {
+                credentialService.addCredential(credentialForm);
+                model.addAttribute("successCredentialAction", "Credential added successfully!");
+            }
+            catch (Exception e) {
+                model.addAttribute("errorCredentialAction", e.getMessage());
+            }
             model.addAttribute("credentials", credentialService.getCredentials());
             // add attribute to model called noteForm with the value of new NoteForm() initialized with null values
             model.addAttribute("noteForm", new NoteForm(null, null, null, null));
@@ -114,6 +127,10 @@ public class HomeController implements HandlerExceptionResolver {
         model.addAttribute("credentials", credentialService.getCredentials());
         // add attribute to model called noteForm with the value of new NoteForm() initialized with null values
         model.addAttribute("noteForm", new NoteForm(null, null, null, null));
+        // on successful credential deletion, add a success message to the model
+        model.addAttribute("successCredentialAction", "Credential deleted successfully!");
+        // on successful credential deletion, add a success message to the model
+        model.addAttribute("successCredentialAction", "Credential deleted successfully!");
 
         return "home";
     }
@@ -138,8 +155,16 @@ public class HomeController implements HandlerExceptionResolver {
     @PostMapping("/files/add")
     public String addFile(Authentication authentication, Model model, @RequestParam("fileUpload") MultipartFile file) throws IOException {
         User currentUser = userService.getUser(authentication.getName());
-        // add the file
-        fileService.addFile(new File(null, file.getOriginalFilename(), file.getContentType(), String.valueOf(file.getSize()), currentUser.getUserid(), file.getBytes()));
+        try{
+            // add the file
+            fileService.addFile(new File(null, file.getOriginalFilename(), file.getContentType(), String.valueOf(file.getSize()), currentUser.getUserid(), file.getBytes()));
+            // on successful file upload, add a success message to the model
+            model.addAttribute("successFileAction", "File uploaded successfully!");
+
+        }
+        catch (Exception e) {
+            model.addAttribute("errorFileAction", e.getMessage());
+        }
         // add attribute to model called files with the value of fileService.getFiles()
         model.addAttribute("files", fileService.getFiles());
         // add attribute to model called noteForm with the value of new NoteForm() initialized with null values
@@ -160,6 +185,8 @@ public class HomeController implements HandlerExceptionResolver {
         model.addAttribute("noteForm", new NoteForm(null, null, null, null));
         // add attribute to model called credentialForm with the value of new CredentialForm() initialized with null values
         model.addAttribute("credentialForm", new CredentialForm(null, null, null, null, null));
+        // on successful file deletion, add a success message to the model
+        model.addAttribute("successFileAction", "File deleted successfully!");
 
         return "home";
     }

@@ -26,6 +26,14 @@
 
                 <div class="tab-content" id="nav-tabContent">
                     <div class="tab-pane fade show active" id="nav-files" role="tabpanel" aria-labelledby="nav-files-tab">
+                        <!-- show success message of file added when successFileAction is an non-empty string -->
+                        <div th:if="${successFileAction}" class="alert alert-success" role="alert">
+                            <span th:text="${successFileAction}"></span>
+                        </div>
+                        <!-- show error message of file added when errorFileAction is an non-empty string -->
+                        <div th:if="${errorFileAction}" class="alert alert-danger" role="alert">
+                            <span th:text="${errorFileAction}"></span>
+                        </div>
                         <form th:action="@{/home/files/add}" enctype="multipart/form-data" method="POST">
                             <div class="container">
                                 <div class="row" style="margin: 1em;">
@@ -62,6 +70,11 @@
                         </div>
                     </div>
                     <div class="tab-pane fade" id="nav-notes" role="tabpanel" aria-labelledby="nav-notes-tab">
+                        <!-- show success message of note added when successNoteAction is an non-empty string -->
+                        <div th:if="${successNoteAction}" class="alert alert-success" role="alert">
+                            <span th:text="${successNoteAction}"></span>
+                        </div>
+
                         <button style="margin: 0.25em;" type="button" class="btn btn-info float-right" onclick="showNoteModal()" id="btn-add-note">
                             + Add a New Note
                         </button>
@@ -155,6 +168,15 @@
                         </div>
                     </div>
                     <div class="tab-pane fade" id="nav-credentials" role="tabpanel" aria-labelledby="nav-credentials-tab">
+                        <!-- show success message if successCredentialAction is a non-empty string -->
+                        <div th:if="${successCredentialAction}" class="alert alert-success" role="alert">
+                            <p th:text="${successCredentialAction}"></p>
+                        </div>
+                        <!-- show error message if errorCredentialAction is a non-empty string -->
+                        <div th:if="${errorCredentialAction}" class="alert alert-danger" role="alert">
+                            <p th:text="${errorCredentialAction}"></p>
+                        </div>
+
                         <button style="margin: 0.25em;" type="button" class="btn btn-info float-right" id="btn-add-credential" onclick="showCredentialModal()">
                             + Add a New Credential
                         </button>

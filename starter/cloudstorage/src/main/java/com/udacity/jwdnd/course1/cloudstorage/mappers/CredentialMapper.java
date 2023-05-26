@@ -16,6 +16,10 @@ public interface CredentialMapper {
     // get all credentials by userid in mybatis
     @Select("SELECT * FROM CREDENTIALS WHERE userid = #{userid}")
     List<Credential> getCredentialsByUserId(int userid);
+
+    // get a credential by username and userid in mybatis
+    @Select("SELECT * FROM CREDENTIALS WHERE username = #{username} AND userid = #{userid}")
+    Credential getCredentialByUsername(String username, int userid);
     // insert a credential with a url, username, key, password, and userid in mybatis
     @Insert("INSERT INTO CREDENTIALS (url, username, key, password, userid) VALUES (#{url}, #{username}, #{key}, #{password}, #{userId})")
     int insertCredential(Credential credential);

@@ -17,7 +17,13 @@ public class FileService {
     }
 
     // create a method to add a file
-    public Integer addFile(File file) {
+    public Integer addFile(File file) throws RuntimeException{
+
+        // check if the filename is unique for the user with the given userid
+        if (fileMapper.getFileByFilename(file.getFileName(), file.getUserId()) != null) {
+            throw new RuntimeException("The filename already exists for the user.");
+        }
+
         return fileMapper.insertFile(file);
     }
 
